@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: java-lower-upper-k8s
+spec:
+  # replicas: 3
+  selector:
+    matchLabels:
+      app: java-lower-upper
+  template:
+    metadata:
+      labels:
+        app: java-lower-upper
+    spec:
+      containers:
+        - name: lower-upper
+          image: 192.168.1.21:8083/docker-hosted/lowerupper:latest
+          # env:
+          #   - name: CURL_CA_BUNDLE
+          #     value: /etc/ssl/certs/ca-certificates.crt
+          ports:
+            - containerPort: 8085
+          volumeMounts:
+            - name: nexus-cert
+              mountPath: /etc/ssl/certs/nexus.crt
+              subPath: nexus.crt
+              # readOnly: true
+      volumes:
+        - name: nexus-cert
+          hostPath:
+           path: /etc/ssl/certs
+      # volumes:
+      #   - name: nexus-ssl-certificate
+      #     secret:
+      #       secretName: nexus-ssl-certificate
+      # imagePullSecrets:
+      #   - name: nexus-registry-secret
+      # imagePullPolicy: IfNotPresent
+
+            
