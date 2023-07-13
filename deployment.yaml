@@ -1,12 +1,3 @@
-apiVersion: v1
-kind: Secret
-metadata:
-  name: nexus-certificate-secret
-type: Opaque
-stringData:
-  nexus.crt: |
-    LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURxekNDQXBPZ0F3SUJBZ0lFUXBydC9EQU5CZ2txaGtpRzl3MEJBUXNGQURCd01Rc3dDUVlEVlFRR0V3SkoKVGpFU01CQUdBMVVFQ0JNSlVtRnFZWE4wYUdGdU1SRXdEd1lEVlFRSEV3aFNZV3B6ZEdoaGJqRVJNQThHQTFVRQpDaE1JVTI5dVlYUjVjR1V4RVRBUEJnTlZCQXNUQ0ZOb1lYTm9ZVzVyTVJRd0VnWURWUVFERXd0dFlYTjBaWEl0CmJtOWtaVEFlRncweU16QTNNRGN4TXpNNE1ETmFGdzB6TnpBek1UVXhNek00TUROYU1IQXhDekFKQmdOVkJBWVQKQWtsT01SSXdFQVlEVlFRSUV3bFNZV3BoYzNSb1lXNHhFVEFQQmdOVkJBY1RDRkpoYW5OMGFHRnVNUkV3RHdZRApWUVFLRXdoVGIyNWhkSGx3WlRFUk1BOEdBMVVFQ3hNSVUyaGhjMmhoYm1zeEZEQVNCZ05WQkFNVEMyMWhjM1JsCmNpMXViMlJsTUlJQklqQU5CZ2txaGtpRzl3MEJBUUVGQUFPQ0FROEFNSUlCQ2dLQ0FRRUF3Z2dzUWtwWGEyTFQKUzVaaXVDVTB2bXRlc0FpZXRSOUlZNFFpR0ZXSnBYUmdNckpENjV3Qjl0Vld4Q253bUd6bzlmbkFNeUVOK3I3SQowcE9Xajk2THhyUDVMcm5yMWF2NklKY1ord1ptL1FBQXBGUElKeDB6L1NMaTBYQ05SU0pkWm4xODdhbk1ZMnR0CjB5SHBOWlBZOHcwWGszWVJ4SkhJYXFwaG5SRmh2TkxiazZWVFVLM09ONFNhY2Vlc3Y4S29zdGFCOU9iN1BCWC8KaWpRT3NGenRQZ3lkZUlLWGZ1QmVOR2JESG9MU0RPa3BSNWZpRmw1S2NpLzVRWjdPRkczWVhEeDdpbURDRUJxeApadWcrL0x2MHlsaE4wTUlWaDlFeTNKMWNzaW1teUdnSERXVXVFTncyZDl2TVFtZk9rWGl3cTI1MDdrL3RlUy9FCmJhVlZQU1JEV1FJREFRQUJvMDB3U3pBZEJnTlZIUTRFRmdRVXV0NkdLdTcrVFRMbzk4ajQrWTZNOWFzZ3pzY3cKSEFZRFZSMFJCQlV3RTRJTGJXRnpkR1Z5TFc1dlpHV0hCTUNvQVJVd0RBWURWUjBUQkFVd0F3RUIvekFOQmdrcQpoa2lHOXcwQkFRc0ZBQU9DQVFFQUYwWUxRRk5GSmJJeDNXTkFyVVQ5KzFyMHRaL0pOZHdjdThERmZ1R0ZGWGluClhqVTh1dXlhY3pLWDNTYmEwaHRMenk0cHd1Q3ZERUtCeDNLSjBFODlpdGo5YlJNZGZqNGgwS0QwVHN3TFBEOVkKckY1ZDRKeHc3NUUydWtoSDNBYlE5U003VWg2UnVoQmRBWmduTjBIK3lKaTRTZi85MmpjN0lTb2ZicTNybkJJbQpIR2lSV2hsTUZCOEU3bGMwcTNXa1M2V1pPdXM0a2pTdS94MFdQVHpEd1lURS9ud1cyWG9sTTZCWjF0bGNGT3RFCldKWDhkT2l1OXpEc1dJRUpvNzVmSWFTWW1EWS9SMmRhdFhUR3B5dWZCU2QvQXJNRzNWcGVCaFc1aVFlYjJZV3EKeFEwczdhU0kwU3BXbjhSa0pOMzZWTWdWeUhORkJVS1prUFdkWkJpUSt3PT0KLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo=
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -26,28 +17,8 @@ spec:
           image: 192.168.1.21:8083/docker-hosted/lowerupper:latest
           ports:
             - containerPort: 8080
-          volumeMounts:
-            - name: nexus-certificate-volume
-              mountPath: /etc/ssl/nexus.crt
-              subPath: nexus.crt
-      volumes:
-        - name: nexus-certificate-volume
-          secret:
-            secretName: nexus-certificate-secret
-
-# ---
-# apiVersion: v1
-# kind: Service
-# metadata:
-#   name: java-lower-upper
-# spec:
-#   selector:
-#     app: java-lower-upper
-#   type: NodePort
-#   ports:
-#     - port: 8080
-#       targetPort: 8080
-
+      imagePullSecrets:
+        - name: regcred
 ---
 apiVersion: v1
 kind: Service
