@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: lower-upper
-          image: 192.168.1.21:8083/docker-hosted/lowerupper:latest
+          image: 192.168.1.21:8083/docker-hosted/lowerupper:1.0.45
           ports:
             - containerPort: 8083
       imagePullSecrets:
